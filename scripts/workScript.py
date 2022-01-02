@@ -1,6 +1,7 @@
 from flask import Flask
 from picamera import PiCamera
 import subprocess
+import geocoder
 
 app = Flask(__name__)
 
@@ -10,6 +11,11 @@ def index():
           "stereo:sample_rate=44100 -i pipe:0 -c:v copy -c:a aac -strict experimental -f flv -f flv rtmp://10.0.0.36/live/1"
     subprocess.call(cmd, shell=True)
     return 'Hello world'
+
+@app.route('/gps')
+def gps(): 
+    g = geocoder.ip('me')   
+    return str(g.latlng)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
